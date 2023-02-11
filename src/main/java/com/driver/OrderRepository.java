@@ -130,9 +130,10 @@ public class OrderRepository {
         List<String>list=pairDB.getOrDefault(partnerId,new ArrayList<>());
         if(list.size()==0)return;
         //usAssigning all the order
-        for(String s: list){
-            isOrderAssigned.remove(s);
-        }
+//        for(String s: list){
+//            isOrderAssigned.add(s);
+//        }
+        isOrderAssigned.addAll(pairDB.get(partnerId));
 
         //remove form the pairDB
         pairDB.remove(partnerId);

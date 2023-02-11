@@ -12,7 +12,7 @@ public class Order {
 
         this.id=id;
 
-        String arr[]=deliveryTime.split(":");
+        String arr[]=deliveryTime.split(":");//12:45
         int hr=Integer.parseInt(arr[0]);
         int min=Integer.parseInt(arr[1]);
 
