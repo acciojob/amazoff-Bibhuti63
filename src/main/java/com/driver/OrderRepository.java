@@ -8,11 +8,18 @@ import java.util.*;
 public class OrderRepository {
 
     //database//Hashmap
-    HashMap<String,Order> orderDB=new HashMap<>();
-    HashMap<String,DeliveryPartner> partnerDB=new HashMap<>();
-    HashMap<String, List<String>> pairDB=new HashMap<>();
-    HashSet<String> isOrderAssigned=new HashSet<>();
+    HashMap<String,Order> orderDB;
+    HashMap<String,DeliveryPartner> partnerDB;
+    HashMap<String, List<String>> pairDB;
+    HashSet<String> isOrderAssigned;
 
+    public OrderRepository() {
+        orderDB=new HashMap<>();
+        partnerDB=new HashMap<>();
+        pairDB=new HashMap<>();
+        isOrderAssigned=new HashSet<>();
+
+    }
 
     public void addOrder(Order order) {
         orderDB.put(order.getId(),order);
@@ -44,8 +51,8 @@ public class OrderRepository {
     }
 
     public Integer getOrderCountByPartnerId(String partnerId) {
-        return partnerDB.get(partnerId).getNumberOfOrders();
-//        return pairDB.get(partnerId).size();
+//        return partnerDB.get(partnerId).getNumberOfOrders();
+        return pairDB.get(partnerId).size();
     }
 
     public List<String> getOrdersByPartnerId(String partnerId) {
