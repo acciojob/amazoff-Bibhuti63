@@ -128,19 +128,18 @@ public class OrderRepository {
     }
 
     public void deletePartnerById(String partnerId) {
-        if(!partnerDB.containsKey(partnerId)){
-            return;
+        if(!pairDB.isEmpty()){
+            isOrderAssigned.addAll(pairDB.get(partnerId));
         }
+//        if(!partnerDB.containsKey(partnerId)){
+//            return;
+//        }
         //removing form partnerDB
         partnerDB.remove(partnerId);
 
-        List<String>list=pairDB.getOrDefault(partnerId,new ArrayList<>());
-        if(list.size()==0)return;
-        //usAssigning all the order
-//        for(String s: list){
-//            isOrderAssigned.add(s);
-//        }
-        isOrderAssigned.addAll(pairDB.get(partnerId));
+//        List<String>list=pairDB.getOrDefault(partnerId,new ArrayList<>());
+//        if(list.size()==0)return;
+//        isOrderAssigned.addAll(pairDB.get(partnerId));
 
         //remove form the pairDB
         pairDB.remove(partnerId);
@@ -148,24 +147,20 @@ public class OrderRepository {
     }
 
     public void deleteOrderById(String orderId) {
-        if(!orderDB.containsKey(orderId)){
-            return;
-        }
-        //removed from orderDB
-        orderDB.remove(orderId);
-        //unAssigning from partner
-        if(!isOrderAssigned.contains(orderId)){
-            return;
-        }
-        isOrderAssigned.remove(orderId);
-        for(String s: pairDB.keySet()){
-            List<String>list=pairDB.getOrDefault(s,new ArrayList<>());
-            if(list.contains(orderId)){
-                partnerDB.get(s).setNumberOfOrders(list.size()-1);
-                list.remove(orderId);
-                break;
+        //Delete an order and the corresponding partner should be unassigned
+        if(orderDB.containsKey(orderId)){
+            if(isOrderAssigned.contains(orderId)){
+                isOrderAssigned.remove(orderId);
             }
+            else{
 
+                for(String str : pairDB.keySet()){
+                    List<String> list=pairDB.get(str);
+                    if(list.contains(orderId)){
+                        list.remove(orderId);
+                    }
+                }
+            }
         }
 
 
