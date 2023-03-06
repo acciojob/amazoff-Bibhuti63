@@ -11,19 +11,19 @@ public class OrderRepository {
     HashMap<String,Order> orderDB;
     HashMap<String,DeliveryPartner> partnerDB;
     HashMap<String, List<String>> pairDB;
-    HashSet<String> isOrderAssigned;
+    HashSet<String> isOrderNotAssigned;
 
     public OrderRepository() {
         orderDB=new HashMap<>();
         partnerDB=new HashMap<>();
         pairDB=new HashMap<>();
-        isOrderAssigned=new HashSet<>();
+        isOrderNotAssigned =new HashSet<>();
 
     }
 
     public void addOrder(Order order) {
         orderDB.put(order.getId(),order);
-        isOrderAssigned.add(order.getId());
+        isOrderNotAssigned.add(order.getId());
     }
 
     public void addPartner(String partnerId) {
@@ -38,7 +38,7 @@ public class OrderRepository {
         pairDB.put(partnerId,list);
         partnerDB.get(partnerId).setNumberOfOrders(partnerDB.get(partnerId).getNumberOfOrders()+1);
 
-        isOrderAssigned.remove(orderId);
+        isOrderNotAssigned.remove(orderId);
     }
 
     public Order getOrderById(String orderId) {
@@ -69,7 +69,7 @@ public class OrderRepository {
     }
 
     public Integer getCountOfUnassignedOrders() {
-       return isOrderAssigned.size();
+       return isOrderNotAssigned.size();
     }
 
     public Integer getOrdersLeftAfterGivenTimeByPartnerId(String time, String partnerId) {
@@ -129,7 +129,7 @@ public class OrderRepository {
 
     public void deletePartnerById(String partnerId) {
         if(!pairDB.isEmpty()){
-            isOrderAssigned.addAll(pairDB.get(partnerId));
+            isOrderNotAssigned.addAll(pairDB.get(partnerId));
         }
 //        if(!partnerDB.containsKey(partnerId)){
 //            return;
@@ -149,16 +149,14 @@ public class OrderRepository {
     public void deleteOrderById(String orderId) {
         //Delete an order and the corresponding partner should be unassigned
         if(orderDB.containsKey(orderId)){
-            if(isOrderAssigned.contains(orderId)){
-                isOrderAssigned.remove(orderId);
+            if(isOrderNotAssigned.contains(orderId)){
+                isOrderNotAssigned.remove(orderId);
             }
             else{
 
                 for(String str : pairDB.keySet()){
                     List<String> list=pairDB.get(str);
-                    if(list.contains(orderId)){
-                        list.remove(orderId);
-                    }
+                    list.remove(orderId);
                 }
             }
         }
