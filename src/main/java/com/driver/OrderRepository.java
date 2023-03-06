@@ -11,19 +11,19 @@ public class OrderRepository {
     HashMap<String,Order> orderDB;
     HashMap<String,DeliveryPartner> partnerDB;
     HashMap<String, List<String>> pairDB;
-    HashSet<String> isOrderNotAssigned;
+    HashSet<String> orderNotAssigned;
 
     public OrderRepository() {
         orderDB=new HashMap<>();
         partnerDB=new HashMap<>();
         pairDB=new HashMap<>();
-        isOrderNotAssigned =new HashSet<>();
+        orderNotAssigned =new HashSet<>();
 
     }
 
     public void addOrder(Order order) {
         orderDB.put(order.getId(),order);
-        isOrderNotAssigned.add(order.getId());
+        orderNotAssigned.add(order.getId());
     }
 
     public void addPartner(String partnerId) {
@@ -38,7 +38,7 @@ public class OrderRepository {
         pairDB.put(partnerId,list);
         partnerDB.get(partnerId).setNumberOfOrders(partnerDB.get(partnerId).getNumberOfOrders()+1);
 
-        isOrderNotAssigned.remove(orderId);
+        orderNotAssigned.remove(orderId);
     }
 
     public Order getOrderById(String orderId) {
@@ -69,7 +69,7 @@ public class OrderRepository {
     }
 
     public Integer getCountOfUnassignedOrders() {
-       return isOrderNotAssigned.size();
+       return orderNotAssigned.size();
     }
 
     public Integer getOrdersLeftAfterGivenTimeByPartnerId(String time, String partnerId) {
@@ -129,19 +129,11 @@ public class OrderRepository {
 
     public void deletePartnerById(String partnerId) {
         if(!pairDB.isEmpty()){
-            isOrderNotAssigned.addAll(pairDB.get(partnerId));
+            orderNotAssigned.addAll(pairDB.get(partnerId));
         }
-//        if(!partnerDB.containsKey(partnerId)){
-//            return;
-//        }
-        //removing form partnerDB
+
         partnerDB.remove(partnerId);
 
-//        List<String>list=pairDB.getOrDefault(partnerId,new ArrayList<>());
-//        if(list.size()==0)return;
-//        isOrderAssigned.addAll(pairDB.get(partnerId));
-
-        //remove form the pairDB
         pairDB.remove(partnerId);
 
     }
@@ -149,8 +141,8 @@ public class OrderRepository {
     public void deleteOrderById(String orderId) {
         //Delete an order and the corresponding partner should be unassigned
         if(orderDB.containsKey(orderId)){
-            if(isOrderNotAssigned.contains(orderId)){
-                isOrderNotAssigned.remove(orderId);
+            if(orderNotAssigned.contains(orderId)){
+                orderNotAssigned.remove(orderId);
             }
             else{
 
